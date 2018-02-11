@@ -3,4 +3,4 @@
 #include "Perplex.h"
 #include "Modules/ModuleManager.h"
 
-IMPLEMENT_PRIMARY_GAME_MODULE( FDefaultGameModuleImpl, Perplex, "Perplex" );
+IMPLEMENT_PRIMARY_GAME_MODULE(FDefaultGameModuleImpl, Perplex, "Perplex");

@@ -1,14 +1,13 @@
 // Copyright 2018 Tin Rabzelj. All Rights Reserved.
 
 #include "MPlayerController.h"
-#include "GameFramework/Character.h"
-#include "MCharacter.h"
+#include "MPlayerCharacter.h"
 
 void AMPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
-	if (InputComponent != nullptr)
+	if (InputComponent)
 	{
 		// Setup axes
 		InputComponent->BindAxis("MoveHorizontal", this, &AMPlayerController::OnMoveHorizontal);
@@ -23,9 +22,16 @@ void AMPlayerController::SetupInputComponent()
 		InputComponent->BindAction("Run", IE_Released, this, &AMPlayerController::OnStopRun);
 		InputComponent->BindAction("Aim", IE_Pressed, this, &AMPlayerController::OnStartAim);
 		InputComponent->BindAction("Aim", IE_Released, this, &AMPlayerController::OnStopAim);
-
-		PlayerCharacter = Cast<AMCharacter>(GetCharacter());
+		InputComponent->BindAction("Fire", IE_Pressed, this, &AMPlayerController::OnStartWeaponFire);
+		InputComponent->BindAction("Fire", IE_Released, this, &AMPlayerController::OnStopWeaponFire);
 	}
+}
+
+void AMPlayerController::BeginPlayingState()
+{
+	Super::BeginPlayingState();
+
+	PlayerCharacter = Cast<AMPlayerCharacter>(GetCharacter());
 }
 
 void AMPlayerController::OnMoveHorizontal(float AxisValue)
@@ -35,45 +41,90 @@ void AMPlayerController::OnMoveHorizontal(float AxisValue)
 
 void AMPlayerController::OnMoveVertical(float AxisValue)
 {
-	PlayerCharacter->MoveVertical(AxisValue);
+	UE_LOG(LogTemp, Log, TEXT("MoveVertical amount: %f"), AxisValue);
+
+	if (PlayerCharacter)
+	{
+		PlayerCharacter->MoveVertical(AxisValue);
+	}
 }
 
 void AMPlayerController::OnLookHorizontal(float AxisValue)
 {
-	PlayerCharacter->AddControllerYawInput(AxisValue);
+	if (PlayerCharacter)
+	{
+		PlayerCharacter->AddControllerYawInput(AxisValue);
+	}
 }
 
 void AMPlayerController::OnLookVertical(float AxisValue)
 {
-	PlayerCharacter->AddControllerPitchInput(AxisValue);
+	if (PlayerCharacter)
+	{
+		PlayerCharacter->AddControllerPitchInput(AxisValue);
+	}
 }
 
 void AMPlayerController::OnStartJump()
 {
-	PlayerCharacter->StartJump();
+	if (PlayerCharacter)
+	{
+		PlayerCharacter->StartJump();
+	}
 }
 
 void AMPlayerController::OnStopJump()
 {
-	PlayerCharacter->StopJump();
+	if (PlayerCharacter)
+	{
+		PlayerCharacter->StopJump();
+	}
 }
 
 void AMPlayerController::OnStartRun()
 {
-	PlayerCharacter->StartRun();
+	if (PlayerCharacter)
+	{
+		PlayerCharacter->StartRun();
+	}
 }
 
 void AMPlayerController::OnStopRun()
 {
-	PlayerCharacter->StopRun();
+	if (PlayerCharacter)
+	{
+		PlayerCharacter->StopRun();
+	}
 }
 
 void AMPlayerController::OnStartAim()
 {
-	PlayerCharacter->StartAim();
+	if (PlayerCharacter)
+	{
+		PlayerCharacter->StartAim();
+	}
 }
 
 void AMPlayerController::OnStopAim()
 {
-	PlayerCharacter->StopAim();
+	if (PlayerCharacter)
+	{
+		PlayerCharacter->StopAim();
+	}
+}
+
+void AMPlayerController::OnStartWeaponFire()
+{
+	if (PlayerCharacter)
+	{
+		PlayerCharacter->StartWeaponFire();
+	}
+}
+
+void AMPlayerController::OnStopWeaponFire()
+{
+	if (PlayerCharacter)
+	{
+		PlayerCharacter->StopWeaponFire();
+	}
 }

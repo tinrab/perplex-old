@@ -6,7 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "MPlayerController.generated.h"
 
-class AMCharacter;
+class AMPlayerCharacter;
 
 UCLASS()
 class PERPLEX_API AMPlayerController : public APlayerController
@@ -15,6 +15,8 @@ class PERPLEX_API AMPlayerController : public APlayerController
 
 public:
 	virtual void SetupInputComponent() override;
+
+	virtual void BeginPlayingState() override;
 
 	UFUNCTION()
 	void OnMoveHorizontal(float AxisValue);
@@ -46,6 +48,12 @@ public:
 	UFUNCTION()
 	void OnStopAim();
 
+	UFUNCTION()
+	void OnStartWeaponFire();
+
+	UFUNCTION()
+	void OnStopWeaponFire();
+
 private:
-	AMCharacter* PlayerCharacter;
+	AMPlayerCharacter* PlayerCharacter;
 };

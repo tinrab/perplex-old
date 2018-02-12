@@ -9,7 +9,6 @@
 
 class UCameraComponent;
 class USkeletalMeshComponent;
-class UArrowComponent;
 
 UCLASS()
 class PERPLEX_API AMPlayerCharacter : public AMCharacter
@@ -19,6 +18,28 @@ class PERPLEX_API AMPlayerCharacter : public AMCharacter
 public:
 	AMPlayerCharacter();
 
+	UFUNCTION(BlueprintCallable, Category = "Player Character")
+	bool IsFiring() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Player Character")
+	bool IsAiming() const;
+
+	void StartAim();
+
+	void StopAim();
+
+	virtual void StartRun() override;
+
+	virtual void StartRunToggle() override;
+
+	void StartWeaponFire();
+
+	void StopWeaponFire();
+
+	bool CanFire() const;
+
+	FRotator GetAimOffsets() const;
+
 protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Components")
 	UCameraComponent* FirstPersonCamera;
@@ -26,10 +47,17 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Components")
 	USkeletalMeshComponent* FirstPersonMesh;
 
-	UPROPERTY(VisibleDefaultsOnly, Category = "Components")
-	USkeletalMeshComponent* WeaponMesh;
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	FName WeaponAttachPoint;
+
+	bool bIsAiming;
+
+	bool bWantsToFire;
 
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void BeginPlay() override;
+
+private:
+	void SetAiming(bool bNewAiming);
 };

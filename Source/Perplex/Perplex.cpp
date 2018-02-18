@@ -4,3 +4,5 @@
 #include "Modules/ModuleManager.h"
 
 IMPLEMENT_PRIMARY_GAME_MODULE(FDefaultGameModuleImpl, Perplex, "Perplex");
+
+DEFINE_LOG_CATEGORY(LogWeapon);

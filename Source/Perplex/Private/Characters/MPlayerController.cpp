@@ -41,8 +41,6 @@ void AMPlayerController::OnMoveHorizontal(float AxisValue)
 
 void AMPlayerController::OnMoveVertical(float AxisValue)
 {
-	UE_LOG(LogTemp, Log, TEXT("MoveVertical amount: %f"), AxisValue);
-
 	if (PlayerCharacter)
 	{
 		PlayerCharacter->MoveVertical(AxisValue);

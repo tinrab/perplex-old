@@ -14,18 +14,20 @@
 AMWeapon::AMWeapon()
 {
 	MeshFP = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonMesh"));
+	MeshFP->SetOnlyOwnerSee(true);
 	MeshFP->MeshComponentUpdateFlag = EMeshComponentUpdateFlag::OnlyTickPoseWhenRendered;
-	MeshFP->bReceivesDecals = false;
-	MeshFP->CastShadow = false;
+	MeshFP->SetReceivesDecals(false);
+	MeshFP->SetCastShadow(false);
 	MeshFP->SetCollisionObjectType(ECC_WorldDynamic);
 	MeshFP->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	MeshFP->SetCollisionResponseToAllChannels(ECR_Ignore);
 	RootComponent = MeshFP;
 
 	MeshTP = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("ThirdPersonMesh"));
+	MeshTP->SetOwnerNoSee(true);
 	MeshTP->MeshComponentUpdateFlag = EMeshComponentUpdateFlag::OnlyTickPoseWhenRendered;
-	MeshTP->bReceivesDecals = false;
-	MeshTP->CastShadow = true;
+	MeshTP->SetReceivesDecals(false);
+	MeshTP->SetCastShadow(true);
 	MeshTP->SetCollisionObjectType(ECC_WorldDynamic);
 	MeshTP->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	MeshTP->SetCollisionResponseToAllChannels(ECR_Ignore);
@@ -44,9 +46,8 @@ AMWeapon::AMWeapon()
 	LastFireTime = 0.0f;
 
 	PrimaryActorTick.bCanEverTick = true;
-	PrimaryActorTick.TickGroup = TG_PrePhysics;
-	SetRemoteRoleForBackwardsCompat(ROLE_SimulatedProxy);
-	bReplicates = true;
+	Super::SetTickGroup(TG_PrePhysics);
+	Super::SetReplicates(true);
 	bNetUseOwnerRelevancy = true;
 }
 
@@ -65,7 +66,7 @@ void AMWeapon::StartFire()
 	if (!bWantsToFire)
 	{
 		bWantsToFire = true;
-		DeterminEMWeaponState();
+		DetermineWeaponState();
 	}
 }
 
@@ -79,15 +80,18 @@ void AMWeapon::StopFire()
 	if (bWantsToFire)
 	{
 		bWantsToFire = false;
-		DeterminEMWeaponState();
+		DetermineWeaponState();
 	}
 }
 
 bool AMWeapon::CanFire() const
 {
+	/*
 	bool bHasEnergy = Energy >= WeaponData.Consumption;
 	bool bStateOKToFire = ((CurrentState == EMWeaponState::Idle) || (CurrentState == EMWeaponState::Firing));
 	return bHasEnergy && bStateOKToFire;
+	*/
+	return true;
 }
 
 void AMWeapon::AddEnergy(float Amount)
@@ -102,7 +106,7 @@ void AMWeapon::OnEquip(const AMWeapon* LastWeapon)
 	AttachMeshToPawn();
 
 	bPendingEquip = true;
-	DeterminEMWeaponState();
+	DetermineWeaponState();
 
 	// Only play animation if last weapon is valid
 	if (LastWeapon)
@@ -131,7 +135,7 @@ void AMWeapon::OnEquipFinished()
 	bIsEquipped = true;
 	bPendingEquip = false;
 
-	DeterminEMWeaponState();
+	DetermineWeaponState();
 }
 
 void AMWeapon::OnUnEquip()
@@ -148,7 +152,7 @@ void AMWeapon::OnUnEquip()
 		GetWorldTimerManager().ClearTimer(TimerHandle_OnEquipFinished);
 	}
 
-	DeterminEMWeaponState();
+	DetermineWeaponState();
 }
 
 void AMWeapon::OnEnterInventory(AMCharacter* NewOwner)
@@ -483,7 +487,7 @@ FHitResult AMWeapon::WeaponTrace(const FVector& TraceFrom, const FVector& TraceT
 	return Hit;
 }
 
-void AMWeapon::DeterminEMWeaponState()
+void AMWeapon::DetermineWeaponState()
 {
 	EMWeaponState NewState = EMWeaponState::Idle;
 
@@ -557,12 +561,10 @@ void AMWeapon::AttachMeshToPawn()
 
 		// For locally controller players we attach both weapons and let the bOnlyOwnerSee, bOwnerNoSee flags deal with visibility.
 		FName AttachPoint = OwnerCharacter->GetWeaponAttachPoint();
-		if (OwnerCharacter->IsLocallyControlled() == true)
+		if (OwnerCharacter->IsLocallyControlled())
 		{
-			AMPlayerCharacter* PlayerCharacter = Cast<AMPlayerCharacter>(OwnerCharacter);
-
-			USkeletalMeshComponent* PawnMesh1p = PlayerCharacter->GetFirstPersonMesh();
-			USkeletalMeshComponent* PawnMesh3p = PlayerCharacter->GetThirdPersonMesh();
+			USkeletalMeshComponent* PawnMesh1p = OwnerCharacter->GetFirstPersonMesh();
+			USkeletalMeshComponent* PawnMesh3p = OwnerCharacter->GetThirdPersonMesh();
 			MeshFP->SetHiddenInGame(false);
 			MeshTP->SetHiddenInGame(false);
 			MeshFP->AttachToComponent(PawnMesh1p, FAttachmentTransformRules::KeepRelativeTransform, AttachPoint);
@@ -571,7 +573,7 @@ void AMWeapon::AttachMeshToPawn()
 		else
 		{
 			USkeletalMeshComponent* UseWeaponMesh = GetWeaponMesh();
-			USkeletalMeshComponent* UsePawnMesh = OwnerCharacter->GetMesh();
+			USkeletalMeshComponent* UsePawnMesh = OwnerCharacter->GetCharacterMesh();
 			UseWeaponMesh->AttachToComponent(UsePawnMesh, FAttachmentTransformRules::KeepRelativeTransform, AttachPoint);
 			UseWeaponMesh->SetHiddenInGame(false);
 		}

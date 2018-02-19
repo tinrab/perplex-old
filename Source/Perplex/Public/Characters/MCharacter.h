@@ -192,17 +192,13 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 	FName WeaponAttachPoint;
 
+	/** Starting weapon */
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	TSubclassOf<AMWeapon> StartWeaponClass;
+
 	/** Currently equipped weapon */
 	UPROPERTY(Transient, ReplicatedUsing = OnRep_CurrentWeapon)
-	class AMWeapon* CurrentWeapon;
-
-	/** Default inventory list */
-	UPROPERTY(EditDefaultsOnly, Category = "Inventory")
-	TArray<TSubclassOf<AMWeapon>> DefaultInventoryClasses;
-
-	/** Weapons in inventory */
-	UPROPERTY(Transient, Replicated)
-	TArray<AMWeapon*> Inventory;
+	AMWeapon* CurrentWeapon;
 
 	/** Replicate where this pawn was last hit and damaged */
 	UPROPERTY(Transient, ReplicatedUsing = OnRep_LastTakeHitInfo)

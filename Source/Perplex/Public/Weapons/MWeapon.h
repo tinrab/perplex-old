@@ -37,13 +37,13 @@ struct FMWeaponData
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditDefaultsOnly, Category = "Weapon Data")
+	UPROPERTY(EditDefaultsOnly, Category = "Data")
 	float MaxEnergy;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Weapon Data")
+	UPROPERTY(EditDefaultsOnly, Category = "Data")
 	float Consumption;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Weapon Data")
+	UPROPERTY(EditDefaultsOnly, Category = "Data")
 	float FireRate;
 };
 
@@ -138,7 +138,7 @@ protected:
 
 protected:
 	/** Weapon data */
-	UPROPERTY(EditDefaultsOnly, Category = "Weapon Data")
+	UPROPERTY(EditDefaultsOnly, Category = "Data")
 	FMWeaponData WeaponData;
 
 	/** First person weapon mesh */
@@ -258,7 +258,7 @@ protected:
 	FHitResult WeaponTrace(const FVector& TraceFrom, const FVector& TraceTo) const;
 
 	/** Determine current weapon state */
-	void DeterminEMWeaponState();
+	void DetermineWeaponState();
 
 	/** Set weapon state */
 	void SetWeaponState(EMWeaponState NewState);

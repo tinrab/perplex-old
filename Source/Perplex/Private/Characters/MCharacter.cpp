@@ -116,6 +116,13 @@ void AMCharacter::PostInitializeComponents()
 	if (Role == ROLE_Authority)
 	{
 		Health = 10.0f;
+
+		// Spawn starting weapon
+		FActorSpawnParameters SpawnInfo;
+		SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		AMWeapon* NewWeapon = GetWorld()->SpawnActor<AMWeapon>(StartWeaponClass, SpawnInfo);
+
+		EquipWeapon(NewWeapon);
 	}
 
 	// set initial mesh visibility (3rd person view)
@@ -194,7 +201,7 @@ void AMCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLi
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	// only to local owner: weapon change requests are locally instigated, other clients don't need it
-	DOREPLIFETIME_CONDITION(AMCharacter, Inventory, COND_OwnerOnly);
+	//DOREPLIFETIME_CONDITION(AMCharacter, Inventory, COND_OwnerOnly);
 
 	// everyone except local owner: flag change is locally instigated
 	DOREPLIFETIME_CONDITION(AMCharacter, bIsAiming, COND_SkipOwner);
@@ -483,7 +490,8 @@ void AMCharacter::DestroyInventory()
 	{
 		return;
 	}
-
+	
+	/*
 	for (int32 i = Inventory.Num() - 1; i >= 0; i--)
 	{
 		AMWeapon* Weapon = Inventory[i];
@@ -494,6 +502,7 @@ void AMCharacter::DestroyInventory()
 			Weapon->Destroy();
 		}
 	}
+	*/
 }
 
 float AMCharacter::TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser)

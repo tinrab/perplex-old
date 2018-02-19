@@ -29,39 +29,39 @@ struct FMInstantWeaponData
 	GENERATED_BODY()
 
 	/** Base weapon spread (degrees) */
-	UPROPERTY(EditDefaultsOnly, Category = "Instant Weapon")
+	UPROPERTY(EditDefaultsOnly, Category = "Data")
 	float WeaponSpread;
 
 	/** Aim spread modifier */
-	UPROPERTY(EditDefaultsOnly, Category = "Instant Weapon")
+	UPROPERTY(EditDefaultsOnly, Category = "Data")
 	float AimSpreadModifier;
 
 	/** Continuous firing: spread increment */
-	UPROPERTY(EditDefaultsOnly, Category = "Instant Weapon")
+	UPROPERTY(EditDefaultsOnly, Category = "Data")
 	float FiringSpreadIncrement;
 
 	/** Continuous firing: max increment */
-	UPROPERTY(EditDefaultsOnly, Category = "Instant Weapon")
+	UPROPERTY(EditDefaultsOnly, Category = "Data")
 	float FiringSpreadMax;
 
 	/** Weapon range */
-	UPROPERTY(EditDefaultsOnly, Category = "Instant Weapon")
+	UPROPERTY(EditDefaultsOnly, Category = "Data")
 	float WeaponRange;
 
 	/** Damage amount */
-	UPROPERTY(EditDefaultsOnly, Category = "Instant Weapon")
+	UPROPERTY(EditDefaultsOnly, Category = "Data")
 	int32 HitDamage;
 
 	/** Type of damage */
-	UPROPERTY(EditDefaultsOnly, Category = "Instant Weapon")
+	UPROPERTY(EditDefaultsOnly, Category = "Data")
 	TSubclassOf<UDamageType> DamageType;
 
 	/** Hit verification: scale for bounding box of hit actor */
-	UPROPERTY(EditDefaultsOnly, Category = "Instant Weapon")
+	UPROPERTY(EditDefaultsOnly, Category = "Data")
 	float ClientSideHitLeeway;
 
 	/** Hit verification: threshold for dot product between view direction and hit direction */
-	UPROPERTY(EditDefaultsOnly, Category = "Instant Weapon")
+	UPROPERTY(EditDefaultsOnly, Category = "Data")
 	float AllowedViewDotHitDir;
 
 	FMInstantWeaponData();
@@ -77,7 +77,7 @@ public:
 
 protected:
 	/** Weapon config */
-	UPROPERTY(EditDefaultsOnly, Category = "Instant Weapon Data")
+	UPROPERTY(EditDefaultsOnly, Category = "Data")
 	FMInstantWeaponData InstantData;
 
 	/** Impact effects */
